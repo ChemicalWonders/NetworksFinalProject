@@ -13,11 +13,11 @@ def prompt() :
 
 def login() : 
     name = raw_input('Enter Username: ')
-    print name
+    #print name
     s.send(name);
  
     pwd = getpass.getpass('Enter your Password: ')
-    print pwd
+    #print pwd
     s.send(pwd)
 
 def menu() :
@@ -28,10 +28,8 @@ def menu() :
     print '|| C. POST A MESSAGE                   ||'
     print '|| D. HASHTAG SEARCH                   ||'
     print '|| E. LOG OUT                          ||\n'
+    print 'Enter a value :'
 
-
-def enter() :
-    return raw_input('Enter a value : ')
 #main function
 if __name__ == "__main__":
      
@@ -67,7 +65,7 @@ while loggedin == 0:
 number = '0'
 while 1:
         socket_list = [sys.stdin, s]
-        os.system('clear')
+        #os.system('clear')
         print 'Welcome ' + name + '!' + ' You have ' + number + ' of unread messages.'
         print 'You can start sending messages '
         menu()
@@ -89,7 +87,7 @@ while 1:
              
             #user entered a message
             else :
-                msg = enter()
+                msg = raw_input()
                 if msg == 'C':
                    message = prompt()
                    s.send(name + ': ' + message)

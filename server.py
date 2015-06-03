@@ -15,11 +15,17 @@ class User:
        self.pwd = pwd
 
 
+class Message:
+   def __init__(self, author, body, tags, number):
+       self.author = author
+       self.body = body
+       self.tags = tags
+
 #Function to broadcast chat messages to all connected clients
 def broadcast_data (sock, message):
     #Do not send the message to master socket and the client who has send us the message
     for socket in CONNECTION_LIST:
-        if socket != sock :
+        if socket != server_socket and socket != sock :
             try :
                 socket.send(message)
             except :
@@ -103,7 +109,7 @@ if __name__ == "__main__":
                     #broadcast_data(sock, "Client (%s, %s) is offline" % addr)
                     #print "Client (%s, %s) is offline" % addr
                     sock.close()
-                    #CONNECTION_LIST.remove(sock)
+                    CONNECTION_LIST.remove(sock)
                     continue
      
     server_socket.close()
