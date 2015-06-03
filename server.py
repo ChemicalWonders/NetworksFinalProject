@@ -4,6 +4,11 @@
 import socket
 import select
 import sys
+import re
+
+messagecount = 0
+
+portValues = {}
 
 #Added a new Class for Username and Password Combinations
 class User: 
@@ -14,17 +19,16 @@ class User:
    def change_pwd(self, pwd):
        self.pwd = pwd
 
+sublistA = ['beta', 'omega']
+sublistB = ['alpha']
+sublistC = []
 
-class Message:
-   def __init__(self, author, body, tags, number):
-       self.author = author
-       self.body = body
-       self.tags = tags
-
+messages = []
 #Function to broadcast chat messages to all connected clients
 def broadcast_data (sock, message):
     #Do not send the message to master socket and the client who has send us the message
     for socket in CONNECTION_LIST:
+        #print socket
         if socket != server_socket and socket != sock :
             try :
                 socket.send(message)
@@ -39,8 +43,8 @@ if __name__ == "__main__":
        print 'Usage : python server.py port'
        sys.exit()
     a = ['alpha', 'abcde']
-    b = ['beta' , 'aabbcc']
-    c = ['omega', 'abcabc']
+    b = ['beta' , '12345']
+    c = ['omega', 'abc123']
     checkNames = [a,b,c];
 
     # List to keep track of socket descriptors
@@ -92,7 +96,8 @@ if __name__ == "__main__":
 
                     print personfound;
                     sockfd.send(personfound);
-
+                portValues[personfound] = addr
+                print portValues
                 #broadcast_data(sockfd, "[%s:%s] entered room\n" % addr)
              
             #Some incoming message from a client
@@ -100,8 +105,21 @@ if __name__ == "__main__":
                 # Data recieved from client, process it
                 try:
                     #data that needs to be broadcasted to followers
+                    #print 'sock = ' + str(sock)
                     data = sock.recv(RECV_BUFFER)
+                    #print data.split(':', '#')
                     if data:
+                        splitData = re.split('[:#]', data)
+                        tweet = {}
+                        tweet['author'] = splitData[0]
+                        tweet['body'] = splitData[1]
+                        tweet['hashtags'] = splitData[2:]
+                        tweet['number'] = messagecount
+                        #print tweet
+                        messages.append(tweet)
+                        print str(messages)
+                        messagecount += 1
+                        #print messagecount
                         broadcast_data(sock, "\r" + data + "\n")                
 
                  

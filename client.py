@@ -7,9 +7,13 @@ import string
 import sys
 import getpass
 import os
+import re
 
 def prompt() :
     return raw_input('Enter a tweet \'140 or less\' : ')
+
+def hashtag():
+    return raw_input('Enter the hashtags you want to include: ')
 
 def login() : 
     name = raw_input('Enter Username: ')
@@ -90,7 +94,11 @@ while 1:
                 msg = raw_input()
                 if msg == 'C':
                    message = prompt()
-                   s.send(name + ': ' + message)
+                   hash = hashtag()
+                   if len( message + hash) <= 140:
+                      s.send(name + ': ' + message + hash)
+                   else:
+                      print 'Cannot send because it\'s over 140 characters!\n'
                 
                 elif msg == 'E':
                    print 'Goodbye!'
