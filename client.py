@@ -92,14 +92,31 @@ while 1:
             #user entered a message
             else :
                 msg = raw_input()
-                if msg == 'C':
+                if msg == 'A':
+                   print 'You have 0 unread messages'
+                elif msg == 'B':
+                   print 'You are following,\'beta\', \'omega\' '
+                   following = raw_input('Enter \'1\' to unfollow. Enter \'2\' to follow.')
+                   if following == '1':
+                      unfollowing = raw_input('Enter the name you want to unfollow: ')
+                      print 'You are not following: ' + unfollowing + ' anymore.'                   
+                   elif following == '2':
+                      follower = raw_input('Enter the name you want to follow: ')
+                      print 'You are now following: ' + follower + ' now!'
+
+                elif msg == 'C':
                    message = prompt()
                    hash = hashtag()
                    if len( message + hash) <= 140:
                       s.send(name + ': ' + message + hash)
                    else:
                       print 'Cannot send because it\'s over 140 characters!\n'
-                
+                elif msg == 'D':
+                   hashsearch = raw_input('Enter the Hashtag you would like to search') 
+                   s.send('HASH: ' + hashsearch)
+                   hash = s.recv(1024)
+                   print hash
+
                 elif msg == 'E':
                    print 'Goodbye!'
                    s.close()

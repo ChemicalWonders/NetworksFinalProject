@@ -30,13 +30,30 @@ def broadcast_data (sock, message):
     for socket in CONNECTION_LIST:
         #print socket
         if socket != server_socket and socket != sock :
+            
             try :
                 socket.send(message)
             except :
                 # broken socket connection may be, chat client pressed ctrl+c for example
                 socket.close()
                 CONNECTION_LIST.remove(socket)
- 
+
+
+def hashtag_search (sock, message):
+    for socket in CONNECTION_LIST:
+        if socket == sock:
+            try :
+                socket.send(message)
+            except:
+                socket.close()
+                CONNECTION_LIST.remove(socket)
+
+def search(hashtag, list):
+    for h in list:
+        if h[hashtag] == hashtag:
+            return h
+
+
 if __name__ == "__main__":
     
     if(len(sys.argv) < 2):
@@ -96,7 +113,7 @@ if __name__ == "__main__":
 
                     print personfound;
                     sockfd.send(personfound);
-                portValues[personfound] = addr
+                portValues[personfound] = sock
                 print portValues
                 #broadcast_data(sockfd, "[%s:%s] entered room\n" % addr)
              
@@ -110,6 +127,10 @@ if __name__ == "__main__":
                     #print data.split(':', '#')
                     if data:
                         splitData = re.split('[:#]', data)
+                        if splitData[0] == 'HASH':
+                            value = search(splitData[1], messages)
+                            hashtag_search(sock, str(value))
+                        
                         tweet = {}
                         tweet['author'] = splitData[0]
                         tweet['body'] = splitData[1]
@@ -120,6 +141,7 @@ if __name__ == "__main__":
                         print str(messages)
                         messagecount += 1
                         #print messagecount
+                        
                         broadcast_data(sock, "\r" + data + "\n")                
 
                  
